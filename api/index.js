@@ -7,6 +7,7 @@ export default async function handler(req, res) {
   const token = "process.env.BOT_TOKEN";
   const apiUrl = `https://api.telegram.org/bot${token}/`;
   const update = req.body;
+  console.log('token set:', !!token, 'update:', JSON.stringify(update));
 
   // 1. ОБРАБОТКА ВХОДЯЩЕГО СООБЩЕНИЯ
   if (update && update.message && update.message.text) {
@@ -15,11 +16,12 @@ export default async function handler(req, res) {
     const rawText = update.message.text;
 
     // Удаляем исходное сообщение пользователя
-    await fetch(apiUrl + 'deleteMessage', {
+    const delRes = await fetch(apiUrl + 'deleteMessage', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chat_id: chatId, message_id: messageId })
     });
+    console.log('deleteMessage:', delRes.status, await delRes.text());
 
     // Экранируем спецсимволы HTML
     const safeText = rawText
