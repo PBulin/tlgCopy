@@ -4,7 +4,8 @@ export default async function handler(req, res) {
     return res.status(200).send('OK');
   }
 
-  const token = "process.env.BOT_TOKEN";
+  const token = (process.env.BOT_TOKEN || '').trim().replace(/^["']|["']$/g, '');
+  console.log('token len:', token.length, 'start:', token.slice(0, 11), 'has bot prefix:', token.startsWith('bot'));
   const apiUrl = `https://api.telegram.org/bot${token}/`;
   const update = req.body;
   console.log('token set:', !!token, 'update:', JSON.stringify(update));
